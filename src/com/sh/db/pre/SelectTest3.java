@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.sh.db.util.DBConnector;
+
 public class SelectTest3 {
 	public static void main(String[] args) {
 		//dept에서 부서의 갯수는 총 몇개?
@@ -18,18 +20,12 @@ public class SelectTest3 {
 		String driver = "oracle.jdbc.driver.OracleDriver";
 
 		PreparedStatement st = null;
-		Connection conn = null;
 		ResultSet rs = null;
-
+		Connection conn=null;
 
 		//2. 드라이버 메모리
 		try {
-			Class.forName(driver);
-
-			//3. con연결
-			conn = DriverManager.getConnection(url, user, password);
-
-
+			conn= DBConnector.getConnect();
 			//4. sql문
 			String sql = "select count(deptno), max(deptno), min(deptno) from dept";
 
@@ -50,10 +46,8 @@ public class SelectTest3 {
 			e.printStackTrace();
 		}finally {
 			try {
-				rs.close();
-				st.close();
-				conn.close();
-			} catch (SQLException e) {
+				DBConnector.disConnect(st, conn, rs);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
